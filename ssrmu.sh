@@ -370,11 +370,11 @@ View_User_info(){
  协议和混淆后面的[ _compatible ]，指的是 兼容原版协议/混淆。"
 	echo && echo "==================================================="
 }
-#一键添加用户
-Add_port_user_one_click(){
+#一键添加用户(个人)
+Add_port_user_one(){
 	lalal=$1
 	if [[ "$lalal" == "install" ]]; then
-		match_add=$(python mujson_mgr.py -a -u "${ssr_user}" -p "${ssr_port}" -k "ssrfree.tk" -m "aes-256-cfb" -O "origin" -G "4" -o "plain" -s "2048" -S "2048" -t "100" -f ""|grep -w "add user info")
+		match_add=$(python mujson_mgr.py -a -u "${ssr_user}" -p "${ssr_port}" -k "${ssr_password}" -m "${ssr_method}" -O "${ssr_protocol}" -G "${ssr_protocol_param}" -o "${ssr_obfs}" -s "${ssr_speed_limit_per_con}" -S "${ssr_speed_limit_per_user}" -t "${ssr_transfer}" -f "${ssr_forbid}"|grep -w "add user info")
 	else
 		while true
 		do
@@ -416,16 +416,153 @@ Add_port_user_one_click(){
 	fi
 }
 
+#一键添加用户(订阅节点)
+Add_port_user_sub(){
+	lalal=$1
+	if [[ "$lalal" == "install" ]]; then
+		match_add=$(python mujson_mgr.py -a -u "${ssr_user}" -p "${ssr_port}" -k "${ssr_password}" -m "${ssr_method}" -O "${ssr_protocol}" -G "${ssr_protocol_param}" -o "${ssr_obfs}" -s "${ssr_speed_limit_per_con}" -S "${ssr_speed_limit_per_user}" -t "${ssr_transfer}" -f "${ssr_forbid}"|grep -w "add user info")
+	else
+		while true
+		do
+			Set_config_user_sub
+			Set_config_port_sub
+			Set_config_password_sub
+			Set_config_method_sub
+			Set_config_protocol_sub
+			Set_config_obfs_sub
+			Set_config_protocol_param_sub
+			Set_config_speed_limit_per_con_sub
+			Set_config_speed_limit_per_user_sub
+			Set_config_transfer_sub
+			Set_config_forbid_sub
+			match_port=$(python mujson_mgr.py -l|grep -w "port ${ssr_port}$")
+			[[ ! -z "${match_port}" ]] && echo -e "${Error} 该端口 [${ssr_port}] 已存在，请勿重复添加 !" && exit 1
+			match_username=$(python mujson_mgr.py -l|grep -w "user \[${ssr_user}]")
+			[[ ! -z "${match_username}" ]] && echo -e "${Error} 该用户名 [${ssr_user}] 已存在，请勿重复添加 !" && exit 1
+			match_add=$(python mujson_mgr.py -a -u "${ssr_user}" -p "${ssr_port}" -k "${ssr_password}" -m "${ssr_method}" -O "${ssr_protocol}" -G "${ssr_protocol_param}" -o "${ssr_obfs}" -s "${ssr_speed_limit_per_con}" -S "${ssr_speed_limit_per_user}" -t "${ssr_transfer}" -f "${ssr_forbid}"|grep -w "add user info")
+			if [[ -z "${match_add}" ]]; then
+				echo -e "${Error} 用户添加失败 ${Green_font_prefix}[用户名: ${ssr_user} , 端口: ${ssr_port}]${Font_color_suffix} "
+				break
+			else
+				Add_iptables
+				Save_iptables
+				echo -e "${Info} 用户添加成功 ${Green_font_prefix}[用户名: ${ssr_user} , 端口: ${ssr_port}]${Font_color_suffix} "
+				echo
+				echo -e "${Info} 继续 添加用户配置..."
+			fi
+		done
+	fi
+}
 
-# 设置 配置信息
-Set_config_user(){
+#随机数
+rand(){  
+    min=$1  
+    max=$(($2-$min+1))  
+    num=$(cat /dev/urandom | head -n 10 | cksum | awk -F ' ' '{print $1}')  
+    echo $(($num%$max+$min))  
+}
+#一键添加用户(个人) 配置信息
+Set_config_user_one(){
 	echo "请输入要设置的用户 用户名(请勿重复, 用于区分, 不支持中文、空格, 会报错 !)"
 	read -e -p "(默认: doubi):" ssr_user
 	[[ -z "${ssr_user}" ]] && ssr_user="doubi"
 	ssr_user=$(echo "${ssr_user}"|sed 's/ //g')
 	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
-Set_config_user_one(){
+Set_config_port_one(){
+	ssr_port="$(rand 10000 65535)"
+	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_password_one(){
+	ssr_password="ssrfree.tk"
+	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_method_one(){
+		ssr_method="aes-256-cfb"
+	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_protocol_one(){
+	ssr_protocol="origin"
+	echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_obfs_one(){
+	ssr_obfs="plain"
+	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_protocol_param_one(){
+	ssr_protocol_param="4" 
+	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
+}
+Set_config_speed_limit_per_con_one(){
+	ssr_speed_limit_per_con="2048"
+    echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_speed_limit_per_user_one(){
+	ssr_speed_limit_per_user="2048"
+	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_transfer_one(){
+	ssr_transfer="100"
+	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
+}
+Set_config_forbid_one(){
+	ssr_forbid=""
+	echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+
+#一键添加用户(订阅节点) 配置信息
+Set_config_user_sub(){
+	echo "请输入要设置的用户 用户名(请勿重复, 用于区分, 不支持中文、空格, 会报错 !)"
+	read -e -p "(默认: doubi):" ssr_user
+	[[ -z "${ssr_user}" ]] && ssr_user="doubi"
+	ssr_user=$(echo "${ssr_user}"|sed 's/ //g')
+	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_port_sub(){
+	ssr_port="$(rand 10000 65535)"
+	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_password_sub(){
+	ssr_password="ssrfree.tk"
+	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_method_sub(){
+		ssr_method="aes-256-cfb"
+	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_protocol_sub(){
+	ssr_protocol="origin"
+	echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_obfs_sub(){
+	ssr_obfs="plain"
+	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_protocol_param_sub(){
+	ssr_protocol_param="30" 
+	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
+}
+Set_config_speed_limit_per_con_sub(){
+	ssr_speed_limit_per_con="1024"
+    echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_speed_limit_per_user_sub(){
+	ssr_speed_limit_per_user="40960"
+	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+Set_config_transfer_sub(){
+	ssr_transfer="330"
+	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
+}
+Set_config_forbid_sub(){
+	ssr_forbid=""
+	echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
+
+
+
+# 设置 配置信息
+Set_config_user(){
 	echo "请输入要设置的用户 用户名(请勿重复, 用于区分, 不支持中文、空格, 会报错 !)"
 	read -e -p "(默认: doubi):" ssr_user
 	[[ -z "${ssr_user}" ]] && ssr_user="doubi"
@@ -451,25 +588,10 @@ Set_config_port(){
 	fi
 	done
 }
-#随机数
-rand(){  
-    min=$1  
-    max=$(($2-$min+1))  
-    num=$(cat /dev/urandom | head -n 10 | cksum | awk -F ' ' '{print $1}')  
-    echo $(($num%$max+$min))  
-}
-Set_config_port_one(){
-	ssr_port="$(rand 10000 65535)"
-	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
 Set_config_password(){
 	echo "请输入要设置的用户 密码"
 	read -e -p "(默认: doub.io):" ssr_password
 	[[ -z "${ssr_password}" ]] && ssr_password="doub.io"
-	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
-Set_config_password_one(){
-	ssr_password="ssrfree.tk"
 	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method(){
@@ -537,10 +659,6 @@ Set_config_method(){
 	fi
 	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
-Set_config_method_one(){
-		ssr_method="aes-256-cfb"
-	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
 Set_config_protocol(){
 	echo -e "请选择要设置的用户 协议插件
 	
@@ -578,10 +696,6 @@ Set_config_protocol(){
 		fi
 	fi
 }
-Set_config_protocol_one(){
-	ssr_protocol="origin"
-	echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
 Set_config_obfs(){
 	echo -e "请选择要设置的用户 混淆插件
 	
@@ -616,10 +730,6 @@ Set_config_obfs(){
 			echo
 	fi
 }
-Set_config_obfs_one(){
-	ssr_obfs="plain"
-	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
 Set_config_protocol_param(){
 	while true
 	do
@@ -639,10 +749,6 @@ Set_config_protocol_param(){
 		echo -e "${Error} 请输入正确的数字(1-9999)"
 	fi
 	done
-}
-Set_config_protocol_param_one(){
-	ssr_protocol_param="4" 
-	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con(){
 	while true
@@ -664,10 +770,7 @@ Set_config_speed_limit_per_con(){
 	fi
 	done
 }
-Set_config_speed_limit_per_con_one(){
-	ssr_speed_limit_per_con="2048"
-    echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
-}
+
 Set_config_speed_limit_per_user(){
 	while true
 	do
@@ -689,10 +792,7 @@ Set_config_speed_limit_per_user(){
 	fi
 	done
 }
-Set_config_speed_limit_per_user_one(){
-	ssr_speed_limit_per_user="2048"
-	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
-}
+
 Set_config_transfer(){
 	while true
 	do
@@ -713,10 +813,7 @@ Set_config_transfer(){
 	fi
 	done
 }
-Set_config_transfer_one(){
-	ssr_transfer="100"
-	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
-}
+
 Set_config_forbid(){
 	echo "请输入要设置的用户 禁止访问的端口"
 	echo -e "${Tip} 禁止的端口：例如不允许访问 25端口，用户就无法通过SSR代理访问 邮件端口25了，如果禁止了 80,443 那么用户将无法正常访问 http/https 网站。
@@ -728,10 +825,7 @@ Set_config_forbid(){
 	[[ -z "${ssr_forbid}" ]] && ssr_forbid=""
 	echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
-Set_config_forbid_one(){
-	ssr_forbid=""
-	echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
-}
+
 Set_config_enable(){
 	user_total=$(echo $((${user_total}-1)))
 	for((integer = 0; integer <= ${user_total}; integer++))
@@ -1923,7 +2017,8 @@ else
 ————————————
  ${Green_font_prefix}14.${Font_color_suffix} 其他功能
  ${Green_font_prefix}15.${Font_color_suffix} 升级脚本
- ${Green_font_prefix}16.${Font_color_suffix} 一键添加用户(最优配置)
+ ${Green_font_prefix}16.${Font_color_suffix} 一键添加用户(个人节点)
+ ${Green_font_prefix}17.${Font_color_suffix} 一键添加用户(订阅节点)
  "
 	menu_status
 	echo && read -e -p "请输入数字 [1-15]：" num
@@ -1974,10 +2069,13 @@ case "$num" in
 	Update_Shell
 	;;
 	16)
-	Add_port_user_one_click
+	Add_port_user_one
+	;;
+	17)
+	Add_port_user_sub
 	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-15]"
+	echo -e "${Error} 请输入正确的数字 [1-17]"
 	;;
 esac
 fi
