@@ -543,7 +543,7 @@ Set_config_protocol_param_sub(){
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_sub(){
-	ssr_speed_limit_per_con="1024"
+	ssr_speed_limit_per_con="2048"
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_sub(){
