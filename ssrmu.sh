@@ -451,24 +451,16 @@ Set_config_port(){
 	fi
 	done
 }
+#随机数
+rand(){  
+    min=$1  
+    max=$(($2-$min+1))  
+    num=$(cat /dev/urandom | head -n 10 | cksum | awk -F ' ' '{print $1}')  
+    echo $(($num%$max+$min))  
+}
 Set_config_port_one(){
-	while true
-	do
-	echo -e "请输入要设置的用户 端口(请勿重复, 用于区分)"
-	read -e -p "(默认: 2333):" ssr_port
-	[[ -z "$ssr_port" ]] && ssr_port="2333"
-	echo $((${ssr_port}+0)) &>/dev/null
-	if [[ $? == 0 ]]; then
-		if [[ ${ssr_port} -ge 1 ]] && [[ ${ssr_port} -le 65535 ]]; then
-			echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
-			break
-		else
-			echo -e "${Error} 请输入正确的数字(1-65535)"
-		fi
-	else
-		echo -e "${Error} 请输入正确的数字(1-65535)"
-	fi
-	done
+	ssr_port="$(rand 10000 65535)"
+	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password(){
 	echo "请输入要设置的用户 密码"
