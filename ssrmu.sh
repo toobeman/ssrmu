@@ -463,51 +463,48 @@ rand(){
 }
 #一键添加用户(个人) 配置信息
 Set_config_user_one(){
-	echo "请输入要设置的用户 用户名(请勿重复, 用于区分, 不支持中文、空格, 会报错 !)"
-	read -e -p "(默认: doubi):" ssr_user
-	[[ -z "${ssr_user}" ]] && ssr_user="doubi"
-	ssr_user=$(echo "${ssr_user}"|sed 's/ //g')
+	read -e -p "请输入要设置的用户 用户名:" ssr_user
 	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_one(){
 	ssr_port="$(rand 10000 65535)"
-	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_one(){
 	ssr_password="ssrfree.tk"
-	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method_one(){
 		ssr_method="aes-256-cfb"
-	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_one(){
 	ssr_protocol="origin"
-	echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_obfs_one(){
 	ssr_obfs="plain"
-	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_one(){
-	ssr_protocol_param="4" 
+	read -e -p "设备数限制:" ssr_protocol_param
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_one(){
-	ssr_speed_limit_per_con="2048"
+	read -e -p "单线程 限速上限(KB/S):" ssr_speed_limit_per_con
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_one(){
-	ssr_speed_limit_per_user="2048"
+	read -e -p "多线程 限速上限(KB/S):" ssr_speed_limit_per_user
 	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_one(){
-	ssr_transfer="100"
+	read -e -p "用户总流量上限(单位: GB, 1-838868 GB):" ssr_transfer
 	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
 }
 Set_config_forbid_one(){
 	ssr_forbid=""
-	echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
+	# echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 
 #一键添加用户(订阅节点) 配置信息
@@ -543,11 +540,11 @@ Set_config_protocol_param_sub(){
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_sub(){
-	ssr_speed_limit_per_con="2048"
+	ssr_speed_limit_per_con="1024"
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_sub(){
-	ssr_speed_limit_per_user="40960"
+	ssr_speed_limit_per_user="2048"
 	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_sub(){
