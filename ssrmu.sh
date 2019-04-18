@@ -467,7 +467,7 @@ Set_config_user_one(){
 	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_one(){
-	ssr_port="$(rand 10000 65535)"
+	ssr_port="$(rand 1000 9999)"
 	# echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_one(){
@@ -495,8 +495,10 @@ Set_config_speed_limit_per_con_one(){
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_one(){
-	read -e -p "多线程 限速上限(KB/S):" ssr_speed_limit_per_user
-	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
+	# read -e -p "多线程 限速上限(KB/S):" ssr_speed_limit_per_user
+	ssr_speed_limit_per_user="${ssr_speed_limit_per_con}"
+	
+	# echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_one(){
 	read -e -p "用户总流量上限(单位: GB, 1-838868 GB):" ssr_transfer
@@ -516,7 +518,7 @@ Set_config_user_sub(){
 	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_sub(){
-	ssr_port="$(rand 10000 65535)"
+	ssr_port="$(rand 1000 9999)"
 	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_sub(){
