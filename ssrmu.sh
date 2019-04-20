@@ -282,7 +282,8 @@ ss_link_qr(){
 	SSbase64=$(urlsafe_base64 "${method}:${password}@${ip}:${port}")
 	SSurl="ss://${SSbase64}"
 	SSQRcode="http://doub.pw/qr/qr.php?text=${SSurl}"
-	ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n SS  二维码 : ${Green_font_prefix}${SSQRcode}${Font_color_suffix}"
+	#ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n SS  二维码 : ${Green_font_prefix}${SSQRcode}${Font_color_suffix}"
+	ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n"
 }
 ssr_link_qr(){
 	SSRprotocol=$(echo ${protocol} | sed 's/_compatible//g')
@@ -291,7 +292,8 @@ ssr_link_qr(){
 	SSRbase64=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}")
 	SSRurl="ssr://${SSRbase64}"
 	SSRQRcode="http://doub.pw/qr/qr.php?text=${SSRurl}"
-	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
+	#ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
+	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n "
 }
 ss_ssr_determine(){
 	protocol_suffix=`echo ${protocol} | awk -F "_" '{print $NF}'`
@@ -363,11 +365,12 @@ View_User_info(){
 	echo -e " 已使用流量 : 上传: ${Green_font_prefix}${u}${Font_color_suffix} + 下载: ${Green_font_prefix}${d}${Font_color_suffix} = ${Green_font_prefix}${transfer_enable_Used_2}${Font_color_suffix}"
 	echo -e " 剩余的流量 : ${Green_font_prefix}${transfer_enable_Used} ${Font_color_suffix}"
 	echo -e " 用户总流量 : ${Green_font_prefix}${transfer_enable} ${Font_color_suffix}"
-	echo -e "${ss_link}"
+	echo
+	#echo -e "${ss_link}"
 	echo -e "${ssr_link}"
-	echo -e " ${Green_font_prefix} 提示: ${Font_color_suffix}
- 在浏览器中，打开二维码链接，就可以看到二维码图片。
- 协议和混淆后面的[ _compatible ]，指的是 兼容原版协议/混淆。"
+	# echo -e " ${Green_font_prefix} 提示: ${Font_color_suffix}
+ # 在浏览器中，打开二维码链接，就可以看到二维码图片。
+ # 协议和混淆后面的[ _compatible ]，指的是 兼容原版协议/混淆。"
 	echo && echo "==================================================="
 }
 #一键添加用户(个人)
@@ -487,11 +490,13 @@ Set_config_obfs_one(){
 	# echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_one(){
-	read -e -p "设备数限制:" ssr_protocol_param
+	read -e -p "设备数限制(默认: 4):" ssr_protocol_param
+	[[ -z "$ssr_protocol_param" ]] && ssr_protocol_param="4"
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_one(){
-	read -e -p "单线程 限速上限(KB/S):" ssr_speed_limit_per_con
+	read -e -p "单线程 限速上限(默认：2048KB/S):" ssr_speed_limit_per_con
+	[[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con="2048"
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_one(){
@@ -501,7 +506,8 @@ Set_config_speed_limit_per_user_one(){
 	# echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_one(){
-	read -e -p "用户总流量上限(单位: GB, 1-838868 GB):" ssr_transfer
+	read -e -p "用户总流量上限(默认:100 GB):" ssr_transfer
+	[[ -z "$ssr_transfer" ]] && ssr_transfer="100"
 	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
 }
 Set_config_forbid_one(){
@@ -538,19 +544,23 @@ Set_config_obfs_sub(){
 	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_sub(){
-	ssr_protocol_param="30" 
+	read -e -p "设备数限制(默认: 50):" ssr_protocol_param
+	[[ -z "$ssr_protocol_param" ]] && ssr_protocol_param="50"
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_sub(){
-	ssr_speed_limit_per_con="1024"
+	read -e -p "单线程 限速上限(默认：500KB/S):" ssr_speed_limit_per_con
+	[[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con="500"
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_sub(){
-	ssr_speed_limit_per_user="2048"
+	read -e -p "多线程 限速上限(默认：1500KB/S)(默认1500):" ssr_speed_limit_per_user
+	[[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user="1500"
 	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_sub(){
-	ssr_transfer="330"
+	read -e -p "用户总流量上限(默认:300 GB):" ssr_transfer
+	[[ -z "$ssr_transfer" ]] && ssr_transfer="300"
 	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
 }
 Set_config_forbid_sub(){
@@ -896,6 +906,26 @@ Set_user_api_server_pub_addr(){
 	fi
 	echo && echo ${Separator_1} && echo -e "	IP或域名 : ${Green_font_prefix}${ssr_server_pub_addr}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
+Set_user_api_server_pub_addr_install(){
+	ssr_server_pub_addr=""
+	if [[ -z "${ssr_server_pub_addr}" ]]; then
+		Get_IP
+		if [[ ${ip} == "VPS_IP" ]]; then
+			while true
+			do
+			read -e -p "${Error} 自动检测外网IP失败，请手动输入服务器IP或域名" ssr_server_pub_addr
+			if [[ -z "$ssr_server_pub_addr" ]]; then
+				echo -e "${Error} 不能为空！"
+			else
+				break
+			fi
+			done
+		else
+			ssr_server_pub_addr="${ip}"
+		fi
+	fi
+	echo && echo ${Separator_1} && echo -e "	IP或域名 : ${Green_font_prefix}${ssr_server_pub_addr}${Font_color_suffix}" && echo ${Separator_1} && echo
+}
 Set_config_all(){
 	lal=$1
 	if [[ "${lal}" == "Modify" ]]; then
@@ -1126,8 +1156,8 @@ Install_SSR(){
 	check_root
 	[[ -e ${ssr_folder} ]] && echo -e "${Error} ShadowsocksR 文件夹已存在，请检查( 如安装失败或者存在旧版本，请先卸载 ) !" && exit 1
 	echo -e "${Info} 开始设置 ShadowsocksR账号配置..."
-	Set_user_api_server_pub_addr
-	Set_config_all
+	Set_user_api_server_pub_addr_install
+	# Set_config_all
 	echo -e "${Info} 开始安装/配置 ShadowsocksR依赖..."
 	Installation_dependency
 	echo -e "${Info} 开始下载/安装 ShadowsocksR文件..."
@@ -1146,8 +1176,8 @@ Install_SSR(){
 	Save_iptables
 	echo -e "${Info} 所有步骤 安装完毕，开始启动 ShadowsocksR服务端..."
 	Start_SSR
-	Get_User_info "${ssr_port}"
-	View_User_info
+	# Get_User_info "${ssr_port}"
+	# View_User_info
 }
 Update_SSR(){
 	SSR_installation_status
