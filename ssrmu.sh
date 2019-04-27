@@ -81,6 +81,15 @@ BBR_installation_status(){
 	fi
 }
 # 设置 防火墙规则
+iptables_status(){
+		iptables -L -n
+}
+Add_iptables_all(){
+		iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:9999 -j ACCEPT
+		iptables -I INPUT -m state --state NEW -m udp -p udp --dport 1:9999 -j ACCEPT
+		ip6tables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:9999 -j ACCEPT
+		ip6tables -I INPUT -m state --state NEW -m udp -p udp --dport 1:9999 -j ACCEPT
+}
 Add_iptables(){
 	if [[ ! -z "${ssr_port}" ]]; then
 		iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport ${ssr_port} -j ACCEPT
@@ -2017,6 +2026,18 @@ menu_status(){
 		echo -e " 当前状态: ${Red_font_prefix}未安装${Font_color_suffix}"
 	fi
 }
+
+
+# 安装Dropbox
+dropbox_uploader(){
+wget -N --no-check-certificate https://raw.github.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh && chmod +x dropbox_uploader.sh && ./dropbox_uploader.sh info
+}
+
+#查看当前ip
+myip(){
+curl myip.ipip.net
+}
+
 check_sys
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 action=$1
@@ -2046,8 +2067,16 @@ else
 ————————————
  ${Green_font_prefix}14.${Font_color_suffix} 其他功能
  ${Green_font_prefix}15.${Font_color_suffix} 升级脚本
- ${Green_font_prefix}16.${Font_color_suffix} 一键添加用户(个人节点)
- ${Green_font_prefix}17.${Font_color_suffix} 一键添加用户(订阅节点)
+————————————
+ ${Green_font_prefix}16.${Font_color_suffix} 一键添加用户(全参数)
+ ${Green_font_prefix}17.${Font_color_suffix} 一键添加用户(个人节点)
+ ${Green_font_prefix}18.${Font_color_suffix} 一键添加用户(订阅节点)
+————————————
+ ${Green_font_prefix}19.${Font_color_suffix} 开放 所有端口(1~9999)
+ ${Green_font_prefix}20.${Font_color_suffix} 查看 防火墙状态
+ ${Green_font_prefix}21.${Font_color_suffix} 查看 当前IP地址
+————————————
+ ${Green_font_prefix}22.${Font_color_suffix} 安装 Dropbox_uploader
  "
 	menu_status
 	echo && read -e -p "请输入数字 [1-15]：" num
@@ -2098,13 +2127,28 @@ case "$num" in
 	Update_Shell
 	;;
 	16)
-	Add_port_user_one
+	Add_port_user
 	;;
 	17)
+	Add_port_user_one
+	;;
+	18)
 	Add_port_user_sub
 	;;
+	19)
+	Add_iptables_all
+	;;
+	20)
+	iptables_status
+	;;
+	21)
+	myip
+	;;
+	22)
+	dropbox_uploader
+	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-17]"
+	echo -e "${Error} 请输入正确的数字 [1-18]"
 	;;
 esac
 fi
