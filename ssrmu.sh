@@ -2033,6 +2033,72 @@ dropbox_uploader(){
 wget -N --no-check-certificate https://raw.github.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh && chmod +x dropbox_uploader.sh && ./dropbox_uploader.sh info
 }
 
+#备份配置文件
+backup_setup_X(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/X
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/X
+}
+backup_setup_Y(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/Y
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/Y
+}
+backup_setup_Z(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/Z
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/Z
+}
+backup_setup_A(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/A
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/A
+}
+backup_setup_B(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/B
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/B
+}
+backup_setup_C(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/C
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/C
+}
+backup_setup_D(){
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/mudb.json /backup/D
+./dropbox_uploader.sh upload /usr/local/shadowsocksr/user-config.json /backup/D
+}
+
+#备份配置
+backup_setup(){
+echo && echo -e "您想备份到哪里？
+	
+  ${Green_font_prefix}1.${Font_color_suffix} 配置 X
+  ${Green_font_prefix}2.${Font_color_suffix} 配置 Y
+  ${Green_font_prefix}3.${Font_color_suffix} 配置 Z
+  ${Green_font_prefix}4.${Font_color_suffix} 配置 A
+  ${Green_font_prefix}5.${Font_color_suffix} 配置 B
+  ${Green_font_prefix}6.${Font_color_suffix} 配置 C
+  ${Green_font_prefix}7.${Font_color_suffix} 配置 D 
+  
+  "&& echo
+  read -e -p "(默认: 取消):" backup_file
+	[[ -z "${backup_file}" ]] && echo "已取消..." && exit 1
+	if [[ ${backup_file} == "1" ]]; then
+		backup_setup_X
+	elif [[ ${backup_file} == "2" ]]; then
+		backup_setup_Y
+	elif [[ ${backup_file} == "3" ]]; then
+		backup_setup_Z
+	elif [[ ${backup_file} == "4" ]]; then
+		backup_setup_A
+	elif [[ ${backup_file} == "5" ]]; then
+		backup_setup_B
+	elif [[ ${backup_file} == "6" ]]; then
+		backup_setup_C
+	elif [[ ${backup_file} == "7" ]]; then
+		backup_setup_D
+	else
+		echo -e "${Error} 请输入正确的数字 [1-7]" && exit 1
+	fi
+}
+	
+
+
 #查看当前ip
 myip(){
 curl myip.ipip.net
@@ -2077,9 +2143,10 @@ else
  ${Green_font_prefix}21.${Font_color_suffix} 查看 当前IP地址
 ————————————
  ${Green_font_prefix}22.${Font_color_suffix} 安装 Dropbox_uploader
+ ${Green_font_prefix}23.${Font_color_suffix} 备份 配置文件
  "
 	menu_status
-	echo && read -e -p "请输入数字 [1-15]：" num
+	echo && read -e -p "请输入数字 [1-23]：" num
 case "$num" in
 	1)
 	Install_SSR
@@ -2146,6 +2213,9 @@ case "$num" in
 	;;
 	22)
 	dropbox_uploader
+	;;
+	23)
+	backup_setup
 	;;
 	*)
 	echo -e "${Error} 请输入正确的数字 [1-18]"
