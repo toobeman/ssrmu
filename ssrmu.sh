@@ -390,6 +390,7 @@ Add_port_user_one(){
 	else
 		while true
 		do
+			List_port_user
 			Set_config_user_one
 			Set_config_port_one
 			Set_config_password_one
@@ -436,6 +437,7 @@ Add_port_user_sub(){
 	else
 		while true
 		do
+			List_port_user
 			Set_config_user_sub
 			Set_config_port_sub
 			Set_config_password_sub
@@ -515,8 +517,8 @@ Set_config_speed_limit_per_user_one(){
 	# echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_one(){
-	read -e -p "用户总流量上限(默认:100 GB):" ssr_transfer
-	[[ -z "$ssr_transfer" ]] && ssr_transfer="100"
+	read -e -p "用户总流量上限(默认:88 GB):" ssr_transfer
+	[[ -z "$ssr_transfer" ]] && ssr_transfer="88"
 	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
 }
 Set_config_forbid_one(){
@@ -558,18 +560,18 @@ Set_config_protocol_param_sub(){
 	echo && echo ${Separator_1} && echo -e "	设备数限制 : ${Green_font_prefix}${ssr_protocol_param}${Font_color_suffix}" && echo ${Separator_1} && echo		
 }
 Set_config_speed_limit_per_con_sub(){
-	read -e -p "单线程 限速上限(默认：500KB/S):" ssr_speed_limit_per_con
-	[[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con="500"
+	read -e -p "单线程 限速上限(默认：300KB/S):" ssr_speed_limit_per_con
+	[[ -z "$ssr_speed_limit_per_con" ]] && ssr_speed_limit_per_con="300"
     echo && echo ${Separator_1} && echo -e "	单线程限速 : ${Green_font_prefix}${ssr_speed_limit_per_con} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_speed_limit_per_user_sub(){
-	read -e -p "多线程 限速上限(默认：1500KB/S)(默认1500):" ssr_speed_limit_per_user
-	[[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user="1500"
+	read -e -p "多线程 限速上限(默认：600KB/S):" ssr_speed_limit_per_user
+	[[ -z "$ssr_speed_limit_per_user" ]] && ssr_speed_limit_per_user="600"
 	echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_sub(){
-	read -e -p "用户总流量上限(默认:300 GB):" ssr_transfer
-	[[ -z "$ssr_transfer" ]] && ssr_transfer="300"
+	read -e -p "用户总流量上限(默认:160 GB):" ssr_transfer
+	[[ -z "$ssr_transfer" ]] && ssr_transfer="160"
 	echo && echo ${Separator_1} && echo -e "	用户总流量 : ${Green_font_prefix}${ssr_transfer} GB${Font_color_suffix}" && echo ${Separator_1} && echo	
 }
 Set_config_forbid_sub(){
