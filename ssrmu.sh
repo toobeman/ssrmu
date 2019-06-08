@@ -85,10 +85,10 @@ iptables_status(){
 		iptables -L -n
 }
 Add_iptables_all(){
-		iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:9999 -j ACCEPT
-		iptables -I INPUT -m state --state NEW -m udp -p udp --dport 1:9999 -j ACCEPT
-		ip6tables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:9999 -j ACCEPT
-		ip6tables -I INPUT -m state --state NEW -m udp -p udp --dport 1:9999 -j ACCEPT
+		iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:65535 -j ACCEPT
+		iptables -I INPUT -m state --state NEW -m udp -p udp --dport 1:65535 -j ACCEPT
+		ip6tables -I INPUT -m state --state NEW -m tcp -p tcp --dport 1:65535 -j ACCEPT
+		ip6tables -I INPUT -m state --state NEW -m udp -p udp --dport 1:65535 -j ACCEPT
 }
 Add_iptables(){
 	if [[ ! -z "${ssr_port}" ]]; then
@@ -390,7 +390,7 @@ Add_port_user_one(){
 	else
 		while true
 		do
-			List_port_user
+			user_port
 			Set_config_user_one
 			Set_config_port_one
 			Set_config_password_one
@@ -437,7 +437,7 @@ Add_port_user_sub(){
 	else
 		while true
 		do
-			List_port_user
+			user_port
 			Set_config_user_sub
 			Set_config_port_sub
 			Set_config_password_sub
@@ -475,13 +475,20 @@ rand(){
     num=$(cat /dev/urandom | head -n 10 | cksum | awk -F ' ' '{print $1}')  
     echo $(($num%$max+$min))  
 }
+
+#用户名和端口
+user_port(){
+
+user_port_number="$(rand 1000 9999)"
+}
+
 #一键添加用户(个人) 配置信息
 Set_config_user_one(){
-	read -e -p "请输入要设置的用户 用户名:" ssr_user
-	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
+	ssr_user=${user_port_number}
+	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_one(){
-	ssr_port="$(rand 1000 9999)"
+	ssr_port=${user_port_number}
 	# echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_one(){
@@ -528,31 +535,28 @@ Set_config_forbid_one(){
 
 #一键添加用户(订阅节点) 配置信息
 Set_config_user_sub(){
-	echo "请输入要设置的用户 用户名(请勿重复, 用于区分, 不支持中文、空格, 会报错 !)"
-	read -e -p "(默认: doubi):" ssr_user
-	[[ -z "${ssr_user}" ]] && ssr_user="doubi"
-	ssr_user=$(echo "${ssr_user}"|sed 's/ //g')
-	echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
+	ssr_user=${user_port_number}
+	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_sub(){
-	ssr_port="$(rand 1000 9999)"
-	echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
+	ssr_port=${user_port_number}
+	#echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_sub(){
 	ssr_password="ssrfree.tk"
-	echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
+	#echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method_sub(){
 		ssr_method="aes-256-cfb"
-	echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+	#echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_sub(){
 	ssr_protocol="origin"
-	echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
+	#echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_obfs_sub(){
 	ssr_obfs="plain"
-	echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
+	#echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_sub(){
 	read -e -p "设备数限制(默认: 50):" ssr_protocol_param
@@ -2106,6 +2110,86 @@ myip(){
 curl myip.ipip.net
 }
 
+#查看所有用户的SSR链接
+List_port_user_SSR(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all=""
+	
+	
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		
+		Get_User_info "${user_port}"
+		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
+		[[ -z "${ip}" ]] && Get_IP
+		ss_ssr_determine
+		
+		user_list_all=${user_list_all}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl}"${Font_color_suffix}\n"
+	done
+	
+		echo -e "原始链接："
+		echo -e "————————————"
+		echo -e ${user_list_all}
+}
+#会员节点SSR链接
+List_port_user_SSR_VIP(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all_VIP=""
+
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		
+		Get_User_info "${user_port}"
+		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
+		[[ -z "${ip}" ]] && Get_IP
+		ss_ssr_determine
+		VIP="vP29iZnNwYXJhbT0mcmVtYXJrcz1Wa2xRTFZOVFV1V3dqLVdLcWVhSml3"
+		user_list_all_VIP=${user_list_all_VIP}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl}""${VIP}"${Font_color_suffix}\n"
+	done
+	
+		echo -e "会员链接："
+		echo -e "————————————"
+		echo -e ${user_list_all_VIP}
+}
+#订阅节点SSR链接
+List_port_user_SSR_dingyue(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all_dingyue=""
+	dingyue="vP29iZnNwYXJhbT0mcmVtYXJrcz1VMU5TNWJDUDVZcXA1b21MTGVXSWh1UzZxLWlLZ3VlQ3VRJmdyb3VwPVUxTlM1YkNQNVlxcDVvbUw"
+	
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		
+		Get_User_info "${user_port}"
+		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
+		[[ -z "${ip}" ]] && Get_IP
+		ss_ssr_determine
+		
+		user_list_all_dingyue=${user_list_all_dingyue}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl}""${dingyue}"${Font_color_suffix}\n"
+	done
+	
+	
+		echo -e "订阅链接："
+		echo -e "————————————"
+		echo -e ${user_list_all_dingyue}
+}
+
+
 check_sys
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 action=$1
@@ -2140,15 +2224,19 @@ else
  ${Green_font_prefix}17.${Font_color_suffix} 一键添加用户(个人节点)
  ${Green_font_prefix}18.${Font_color_suffix} 一键添加用户(订阅节点)
 ————————————
- ${Green_font_prefix}19.${Font_color_suffix} 开放 所有端口(1~9999)
+ ${Green_font_prefix}19.${Font_color_suffix} 开放 所有端口(1~65535)
  ${Green_font_prefix}20.${Font_color_suffix} 查看 防火墙状态
  ${Green_font_prefix}21.${Font_color_suffix} 查看 当前IP地址
 ————————————
  ${Green_font_prefix}22.${Font_color_suffix} 安装 Dropbox_uploader
  ${Green_font_prefix}23.${Font_color_suffix} 备份 配置文件
+————————————
+ ${Green_font_prefix}24.${Font_color_suffix} 查看 原始SSR链接
+ ${Green_font_prefix}25.${Font_color_suffix} 查看 会员SSR链接
+ ${Green_font_prefix}26.${Font_color_suffix} 查看 订阅SSR链接
  "
 	menu_status
-	echo && read -e -p "请输入数字 [1-23]：" num
+	echo && read -e -p "请输入数字 [1-24]：" num
 case "$num" in
 	1)
 	Install_SSR
@@ -2219,8 +2307,17 @@ case "$num" in
 	23)
 	backup_setup
 	;;
+	24)
+	List_port_user_SSR
+	;;
+	25)
+	List_port_user_SSR_VIP
+	;;
+	26)
+	List_port_user_SSR_dingyue
+	;;
 	*)
-	echo -e "${Error} 请输入正确的数字 [1-18]"
+	echo -e "${Error} 请输入正确的数字 [1-24]"
 	;;
 esac
 fi
