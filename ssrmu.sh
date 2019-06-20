@@ -303,8 +303,8 @@ ssr_link_qr(){
 	
 	
 	Groupname=$(urlsafe_base64 "SSR小助手")
-	Remark_VIP=$(urlsafe_base64 "SSR小助手-VIP")
-	Remark_dingyue=$(urlsafe_base64 "SSR小助手-免费节点")
+	Remark_VIP=$(urlsafe_base64 "SSR小助手-VIP-${port}")
+	Remark_dingyue=$(urlsafe_base64 "免费节点[${port}]")
 	
 	SSRbase64=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}")
 	SSRbase64_VIP=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}/?obfsparam=&remarks=${Remark_VIP}&group=${Groupname}")
@@ -491,7 +491,7 @@ rand(){
 #用户名和端口
 user_port(){
 
-user_port_number="$(rand 1000 9999)"
+user_port_number="$(rand 10000 65535)"
 }
 
 #一键添加用户(个人) 配置信息
