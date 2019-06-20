@@ -503,27 +503,22 @@ Set_config_user_one(){
 	else
 		ssr_user=$[user_total+1]
 	fi
-	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_one(){
 	ssr_port=${user_port_number}
-	# echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_one(){
 	ssr_password="ssrfree.tk"
-	# echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method_one(){
-		ssr_method="aes-256-cfb"
-	# echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+		#ssr_method="aes-256-cfb"
+		ssr_method="rc4"
 }
 Set_config_protocol_one(){
 	ssr_protocol="origin"
-	# echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_obfs_one(){
 	ssr_obfs="plain"
-	# echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_one(){
 	read -e -p "设备数限制(默认: 4):" ssr_protocol_param
@@ -538,8 +533,6 @@ Set_config_speed_limit_per_con_one(){
 Set_config_speed_limit_per_user_one(){
 	# read -e -p "多线程 限速上限(KB/S):" ssr_speed_limit_per_user
 	ssr_speed_limit_per_user="${ssr_speed_limit_per_con}"
-	
-	# echo && echo ${Separator_1} && echo -e "	用户总限速 : ${Green_font_prefix}${ssr_speed_limit_per_user} KB/S${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_transfer_one(){
 	read -e -p "用户总流量上限(默认:88 GB):" ssr_transfer
@@ -548,7 +541,6 @@ Set_config_transfer_one(){
 }
 Set_config_forbid_one(){
 	ssr_forbid=""
-	# echo && echo ${Separator_1} && echo -e "	禁止的端口 : ${Green_font_prefix}${ssr_forbid}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 
 #一键添加用户(订阅节点) 配置信息
@@ -560,27 +552,22 @@ Set_config_user_sub(){
 	else
 		ssr_user=$[user_total+1]
 	fi
-	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_sub(){
 	ssr_port=${user_port_number}
-	#echo && echo ${Separator_1} && echo -e "	端口 : ${Green_font_prefix}${ssr_port}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_password_sub(){
 	ssr_password="ssrfree.tk"
-	#echo && echo ${Separator_1} && echo -e "	密码 : ${Green_font_prefix}${ssr_password}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_method_sub(){
-		ssr_method="aes-256-cfb"
-	#echo && echo ${Separator_1} && echo -e "	加密 : ${Green_font_prefix}${ssr_method}${Font_color_suffix}" && echo ${Separator_1} && echo
+		#ssr_method="aes-256-cfb"
+		ssr_method="rc4"
 }
 Set_config_protocol_sub(){
 	ssr_protocol="origin"
-	#echo && echo ${Separator_1} && echo -e "	协议 : ${Green_font_prefix}${ssr_protocol}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_obfs_sub(){
 	ssr_obfs="plain"
-	#echo && echo ${Separator_1} && echo -e "	混淆 : ${Green_font_prefix}${ssr_obfs}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_protocol_param_sub(){
 	read -e -p "设备数限制(默认: 50):" ssr_protocol_param
