@@ -294,12 +294,24 @@ ss_link_qr(){
 	#ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n SS  二维码 : ${Green_font_prefix}${SSQRcode}${Font_color_suffix}"
 	ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n"
 }
+
+#SSR链接生成
 ssr_link_qr(){
 	SSRprotocol=$(echo ${protocol} | sed 's/_compatible//g')
 	SSRobfs=$(echo ${obfs} | sed 's/_compatible//g')
 	SSRPWDbase64=$(urlsafe_base64 "${password}")
+	
+	
+	Groupname=$(urlsafe_base64 "SSR小助手")
+	Remark_VIP=$(urlsafe_base64 "SSR小助手-VIP")
+	Remark_dingyue=$(urlsafe_base64 "SSR小助手-免费节点")
+	
 	SSRbase64=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}")
+	SSRbase64_VIP=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}/?obfsparam=&remarks=${Remark_VIP}&group=${Groupname}")
+	SSRbase64_dingyue=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}/?obfsparam=&remarks=${Remark_dingyue}&group=${Groupname}")
 	SSRurl="ssr://${SSRbase64}"
+	SSRurl_VIP="ssr://${SSRbase64_VIP}"
+	SSRurl_dingyue="ssr://${SSRbase64_dingyue}"
 	SSRQRcode="http://doub.pw/qr/qr.php?text=${SSRurl}"
 	#ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
 	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n "
@@ -484,7 +496,13 @@ user_port_number="$(rand 1000 9999)"
 
 #一键添加用户(个人) 配置信息
 Set_config_user_one(){
-	ssr_user=${user_port_number}
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	if [[ -z ${user_info} ]];then
+	ssr_user="1"
+	else
+		ssr_user=$[user_total+1]
+	fi
 	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_one(){
@@ -535,7 +553,13 @@ Set_config_forbid_one(){
 
 #一键添加用户(订阅节点) 配置信息
 Set_config_user_sub(){
-	ssr_user=${user_port_number}
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	if [[ -z ${user_info} ]];then
+	ssr_user="1"
+	else
+		ssr_user=$[user_total+1]
+	fi
 	#echo && echo ${Separator_1} && echo -e "	用户名 : ${Green_font_prefix}${ssr_user}${Font_color_suffix}" && echo ${Separator_1} && echo
 }
 Set_config_port_sub(){
@@ -2153,8 +2177,7 @@ List_port_user_SSR_VIP(){
 		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
 		[[ -z "${ip}" ]] && Get_IP
 		ss_ssr_determine
-		VIP="vP29iZnNwYXJhbT0mcmVtYXJrcz1Wa2xRTFZOVFV1V3dqLVdLcWVhSml3"
-		user_list_all_VIP=${user_list_all_VIP}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl}""${VIP}"${Font_color_suffix}\n"
+		user_list_all_VIP=${user_list_all_VIP}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl_VIP}"${Font_color_suffix}\n"
 	done
 	
 		echo -e "会员链接："
@@ -2167,7 +2190,6 @@ List_port_user_SSR_dingyue(){
 	user_total=$(echo "${user_info}"|wc -l)
 	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
 	user_list_all_dingyue=""
-	dingyue="vP29iZnNwYXJhbT0mcmVtYXJrcz1VMU5TNWJDUDVZcXA1b21MTGVXSWh1UzZxLWlLZ3VlQ3VRJmdyb3VwPVUxTlM1YkNQNVlxcDVvbUw"
 	
 	for((integer = 1; integer <= ${user_total}; integer++))
 	do
@@ -2180,7 +2202,7 @@ List_port_user_SSR_dingyue(){
 		[[ -z "${ip}" ]] && Get_IP
 		ss_ssr_determine
 		
-		user_list_all_dingyue=${user_list_all_dingyue}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl}""${dingyue}"${Font_color_suffix}\n"
+		user_list_all_dingyue=${user_list_all_dingyue}"端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t SSR链接: ${Green_font_prefix}"${SSRurl_dingyue}"${Font_color_suffix}\n"
 	done
 	
 	
