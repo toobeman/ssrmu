@@ -2199,6 +2199,77 @@ List_port_user_SSR_dingyue(){
 }
 
 
+#会员节点SSR链接 BASE64
+List_port_user_SSR_VIP_BASE64(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all_VIP_BASE64=""
+
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		
+		Get_User_info "${user_port}"
+		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
+		[[ -z "${ip}" ]] && Get_IP
+		ss_ssr_determine
+		user_list_all_VIP_BASE64=${user_list_all_VIP_BASE64}${SSRurl_VIP}
+	done
+	
+	
+		echo && read -e -p "请输入最大节点数(默认：5)：" limit
+		if [[ -z "$limit" ]]; then
+		limit="5"
+		else
+		limit=$[limit+0]
+		fi
+		
+		echo -e "BASE64链接："
+		echo -e "————————————"
+		echo -e $(urlsafe_base64 "MAX=${limit}${user_list_all_VIP_BASE64}")
+		echo -e "————————————"
+}
+#订阅节点SSR链接 BASE64
+List_port_user_SSR_dingyue_BASE64(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all_dingyue_BASE64=""
+	
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		
+		Get_User_info "${user_port}"
+		ip=$(cat ${config_user_api_file}|grep "SERVER_PUB_ADDR = "|awk -F "[']" '{print $2}')
+		[[ -z "${ip}" ]] && Get_IP
+		ss_ssr_determine
+		
+		user_list_all_dingyue_BASE64=${user_list_all_dingyue_BASE64}${SSRurl_dingyue}
+	done
+	
+	
+		echo && read -e -p "请输入最大节点数(默认：5)：" limit
+		if [[ -z "$limit" ]]; then
+		limit="5"
+		else
+		limit=$[limit+0]
+		fi
+		
+		echo -e "BASE64链接："
+		echo -e "————————————"
+		echo -e $(urlsafe_base64 "MAX=${limit}${user_list_all_dingyue_BASE64}")
+		echo -e "————————————"
+}
+
+
+
+
 check_sys
 [[ ${release} != "debian" ]] && [[ ${release} != "ubuntu" ]] && [[ ${release} != "centos" ]] && echo -e "${Error} 本脚本不支持当前系统 ${release} !" && exit 1
 action=$1
@@ -2240,9 +2311,11 @@ else
  ${Green_font_prefix}22.${Font_color_suffix} 安装 Dropbox_uploader
  ${Green_font_prefix}23.${Font_color_suffix} 备份 配置文件
 ————————————
- ${Green_font_prefix}24.${Font_color_suffix} 查看 原始SSR链接
- ${Green_font_prefix}25.${Font_color_suffix} 查看 会员SSR链接
- ${Green_font_prefix}26.${Font_color_suffix} 查看 订阅SSR链接
+ ${Green_font_prefix}24.${Font_color_suffix} 查看 SSR链接 原始
+ ${Green_font_prefix}25.${Font_color_suffix} 查看 SSR链接 会员
+ ${Green_font_prefix}26.${Font_color_suffix} 查看 SSR链接 订阅
+ ${Green_font_prefix}27.${Font_color_suffix} 查看 BASE64链接 会员
+ ${Green_font_prefix}28.${Font_color_suffix} 查看 BASE64链接 订阅
  "
 	menu_status
 	echo && read -e -p "请输入数字 [1-24]：" num
@@ -2324,6 +2397,12 @@ case "$num" in
 	;;
 	26)
 	List_port_user_SSR_dingyue
+	;;
+	27)
+	List_port_user_SSR_VIP_BASE64
+	;;
+	28)
+	List_port_user_SSR_dingyue_BASE64
 	;;
 	*)
 	echo -e "${Error} 请输入正确的数字 [1-24]"
