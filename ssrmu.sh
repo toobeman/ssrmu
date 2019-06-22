@@ -2222,12 +2222,12 @@ List_port_user_SSR_VIP_BASE64(){
 		ss_ssr_determine
 		user_list_all_VIP_BASE64=${user_list_all_VIP_BASE64}${SSRurl_VIP}"\n"
 	done
-		
-		echo -e "BASE64链接："
-		echo -e "————————————"
+		clear
+		#echo -e "BASE64链接："
+		#echo -e "————————————"
 		#echo -e $(urlsafe_base64 "MAX=${limit}${user_list_all_VIP_BASE64}")
 		echo -e "\n"MAX=${limit}"\n"${user_list_all_VIP_BASE64}
-		echo -e "————————————"
+		#echo -e "————————————"
 }
 #订阅节点SSR链接 BASE64
 List_port_user_SSR_dingyue_BASE64(){
@@ -2253,12 +2253,12 @@ List_port_user_SSR_dingyue_BASE64(){
 		ss_ssr_determine
 		user_list_all_dingyue_BASE64=${user_list_all_dingyue_BASE64}${SSRurl_dingyue}"\n"
 	done
-	
-		echo -e "BASE64链接："
-		echo -e "————————————"
+		clear
+		#echo -e "BASE64链接："
+		#echo -e "————————————"
 		#echo -e $(urlsafe_base64 "MAX=${limit} ${user_list_all_dingyue_BASE64}")
 		echo -e "\n"MAX=${limit}"\n"${user_list_all_dingyue_BASE64}
-		echo -e "————————————"
+		#echo -e "————————————"
 }
 
 
