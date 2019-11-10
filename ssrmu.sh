@@ -304,7 +304,7 @@ ssr_link_qr(){
 	
 	Groupname=$(urlsafe_base64 "SSR小助手")
 	Remark_VIP=$(urlsafe_base64 "SSR小助手-VIP-${port}")
-	Remark_dingyue=$(urlsafe_base64 "SSR小助手-免费节点-${port}")
+	Remark_dingyue=$(urlsafe_base64 "SSR小助手-免费-${port}")
 	
 	SSRbase64=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}")
 	SSRbase64_VIP=$(urlsafe_base64 "${ip}:${port}:${SSRprotocol}:${method}:${SSRobfs}:${SSRPWDbase64}/?obfsparam=&remarks=${Remark_VIP}&group=${Groupname}")
@@ -511,8 +511,8 @@ Set_config_password_one(){
 	ssr_password="ssrfree.tk"
 }
 Set_config_method_one(){
-		#ssr_method="aes-256-cfb"
-		ssr_method="rc4"
+		ssr_method="aes-256-cfb"
+		#ssr_method="rc4"
 }
 Set_config_protocol_one(){
 	ssr_protocol="origin"
@@ -560,8 +560,8 @@ Set_config_password_sub(){
 	ssr_password="ssrfree.tk"
 }
 Set_config_method_sub(){
-		#ssr_method="aes-256-cfb"
-		ssr_method="rc4"
+		ssr_method="aes-256-cfb"
+		#ssr_method="rc4"
 }
 Set_config_protocol_sub(){
 	ssr_protocol="origin"
